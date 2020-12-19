@@ -48,3 +48,68 @@ const getBoxPlotData = (values: number[]) => {
     high: sorted[sorted.length - 1],
   };
 };
+
+export const getColomnChartData = (markDetails: MarkDetail[], subjectRepetedCount: number) => {
+  const subjects = getAllCategeries(markDetails, "subject");
+  const subjectIndexMap = subjects.reduce((prev, curr, i) => set(prev, curr, i), {});
+  const studentIdNamMap = {};
+  const studentSubjectMap = markDetails.reduce((prev, curr, i) => {
+    const stdId = get(curr, "studentId");
+    const subj = get(curr, "subject");
+    let valueArr: number[] = get(prev, stdId);
+    if (!get(studentIdNamMap, stdId)) {
+      set(studentIdNamMap, stdId, get(curr, "name"));
+    }
+    if (!valueArr) {
+      set(prev, stdId, new Array(subjects.length).fill(0));
+    }
+    valueArr = get(prev, stdId);
+    const subjIndex = get(subjectIndexMap, subj);
+    valueArr[subjIndex] = valueArr[subjIndex] + get(curr, "mark") / subjectRepetedCount;
+    return prev;
+  }, {});
+  const chartData = Object.keys(studentSubjectMap).reduce((prev, id) => {
+    set(prev, get(studentIdNamMap, id), get(studentSubjectMap, id));
+    return prev;
+  }, {});
+  return { chartData, subjects };
+};
+
+export const getSubjectMarkData = (markDetails: MarkDetail[]) => {
+  const years = getAllCategeries(markDetails, "year");
+  const yearsIndexMap = years.reduce((prev, curr, i) => set(prev, curr, i), {});
+  const chartData = markDetails.reduce((prev, curr, i) => {
+    const year = get(curr, "year");
+    const semester = get(curr, "semester");
+    const subj = get(curr, "subject");
+    let valueArr: number[] = get(prev, subj);
+    if (!valueArr) {
+      set(prev, subj, new Array(years.length * 2).fill(0));
+    }
+    valueArr = get(prev, subj);
+    const yearIndex = semester === 1 ? get(yearsIndexMap, year) * 2 : get(yearsIndexMap, year) * 2 + 1;
+    valueArr[yearIndex] = valueArr[yearIndex] + get(curr, "mark");
+    return prev;
+  }, {});
+  const semesters = years.reduce((prev, year) => {
+    prev.push(`${year} (s-1)`);
+    prev.push(`${year} (s-2)`);
+    return prev;
+  }, []);
+  return { chartData, semesters };
+};
+
+export const getAverage = (studentSubjMap: any) => {
+  const length = Object.keys(studentSubjMap).length;
+  const valsArr = Object.keys(studentSubjMap).reduce((prev, key) => {
+    prev.push(studentSubjMap[key]);
+    return prev;
+  }, [] as any);
+  return sumArrays(valsArr).map(val => val / length);
+};
+
+const sumArrays = (arrays: number[][]) => {
+  const n = arrays.reduce((max, xs) => Math.max(max, xs.length), 0);
+  const result = Array.from({ length: n });
+  return result.map((_, i) => arrays.map(xs => xs[i] || 0).reduce((sum, x) => sum + x, 0));
+};
