@@ -1,7 +1,4 @@
 version: "3"
-volumes:
-  rsm:
-    driver: local
 services:
   mongo:
     image: "mongo:3"

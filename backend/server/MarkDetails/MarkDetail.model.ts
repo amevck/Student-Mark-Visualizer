@@ -2,9 +2,9 @@ import { Document, model, Schema } from "mongoose";
 import { SchemaDef } from "../../types";
 
 // Declare model interface
-interface MarkDetailDoc extends App.MarkDetail, Document {}
+interface MarkDetailDoc extends MarkDetail, Document {}
 
-const itemSchemaDef: SchemaDef<App.MarkDetail> = {
+const itemSchemaDef: SchemaDef<MarkDetail> = {
   name: {
     type: String,
     required: true,
@@ -39,4 +39,4 @@ const itemSchemaDef: SchemaDef<App.MarkDetail> = {
 // Define model schema
 const itemSchema = new Schema(itemSchemaDef);
 
-export default model<MarkDetailDoc>("Item", itemSchema);
+export default model<MarkDetailDoc>("MarkDetail", itemSchema);

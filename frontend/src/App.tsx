@@ -1,95 +1,58 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
+import WiskerChart from "./components/WhiskerChart";
+import { getAllCategeries, getAllValuesForCategeryList } from "./helpers/chartDataMappings";
 import logo from "./logo.svg";
-import { isSessionValid, setSession, clearSession, getAuthHeaders } from "./session";
 
 export interface AppState {
   email: string;
   password: string;
   isRequesting: boolean;
   isLoggedIn: boolean;
-  data: App.MarkDetail[];
+  data: MarkDetail[];
   error: string;
 }
 
-class App extends React.Component<{}, AppState> {
-  public state = {
-    email: "",
-    password: "",
-    isRequesting: false,
-    isLoggedIn: false,
-    data: [],
-    error: "",
+const App = () => {
+  const [error, setError] = useState("");
+  const [markDetails, setMarkDetails] = useState<MarkDetail[]>([]);
+  const [isRequesting, setIsRequesting] = useState<boolean>(false);
+
+  const getTestData = async (): Promise<void> => {
+    try {
+      // setError({ error: "" });
+      const response = await axios.get<MarkDetail[]>("/api/items");
+      setMarkDetails(response.data);
+    } catch (error) {
+      setError("Something went wrong");
+    } finally {
+      setIsRequesting(false);
+    }
   };
+  const catgs = getAllCategeries(markDetails, "subject");
+  const boxPlotdata = getAllValuesForCategeryList(markDetails, catgs, "subject", "mark");
+  useEffect(() => {
+    getTestData();
+  }, []);
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <h1 className="App-title">Welcome to React</h1>
+      </header>
+      <div className="App-error">{error}</div>
 
-  public componentDidMount() {
-    this.setState({ isLoggedIn: isSessionValid() });
-  }
-
-  public render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <div className="App-error">{this.state.error}</div>
-        <div className="App-private">
-          <div>
-            Server test data:
-            {
-              /* <ul>
-              {this.state.data.map((item: App.Item, index) => (
-                <li key={index}>name: {item.name}</li>
-              ))}
-            </ul> */ this
-                .state.data.length
-            }
-          </div>
-          <button disabled={this.state.isRequesting} onClick={this.getTestData}>
-            Get test data
-          </button>
-          {/* <button disabled={this.state.isRequesting} onClick={this.logout}>
-              Log out
-            </button> */}
-        </div>
+      <div>
+        Server test data:
+        <WiskerChart xAxisName={"subjects"} yAxisName={"marks"} xData={catgs} yData={boxPlotdata} />
+        {markDetails.length}
       </div>
-    );
-  }
-
-  private handleLogin = async (): Promise<void> => {
-    const { email, password } = this.state;
-    try {
-      this.setState({ error: "" });
-      this.setState({ isRequesting: true });
-      const response = await axios.post<{ token: string; expiry: string }>("/api/users/login", { email, password });
-      const { token, expiry } = response.data;
-      setSession(token, expiry);
-      this.setState({ isLoggedIn: true });
-    } catch (error) {
-      this.setState({ error: "Something went wrong" });
-    } finally {
-      this.setState({ isRequesting: false });
-    }
-  };
-
-  private logout = (): void => {
-    clearSession();
-    this.setState({ isLoggedIn: false });
-  };
-
-  private getTestData = async (): Promise<void> => {
-    try {
-      this.setState({ error: "" });
-      const response = await axios.get<App.MarkDetail[]>("/api/items", { headers: getAuthHeaders() });
-      this.setState({ data: response.data });
-    } catch (error) {
-      this.setState({ error: "Something went wrong" });
-    } finally {
-      this.setState({ isRequesting: false });
-    }
-  };
-}
+      {/* <button disabled={isRequesting} onClick={getTestData}>
+        Get test data
+      </button> */}
+    </div>
+  );
+};
 
 export default App;
