@@ -52,6 +52,34 @@ button {
   color: darkred;
 }
 
+.navbar-container {
+  background-color: #215388 !important;
+  margin: 0;
+  max-width: 100% !important;
+}
+
+.navbar {
+  background-color: #215388 !important;
+  text-align: center;
+  width: 100%;
+}
+
+.navbar-brand {
+  color: white !important;
+  width: 100%;
+}
+
+.chart-container {
+  margin-top: 10px;
+}
+
+.highcharts-container {
+  margin: 10px;
+  border: 1px solid #215388;
+  width: auto !important;
+  padding-top: 10px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

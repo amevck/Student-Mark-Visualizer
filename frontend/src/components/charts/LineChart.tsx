@@ -51,7 +51,7 @@ const LineChart = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className="chart-container">
       <Chart options={options} />
     </div>
   );

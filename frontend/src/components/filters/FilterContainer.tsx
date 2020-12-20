@@ -39,7 +39,7 @@ const FilterContainer = ({ markDetails, onChangeFilters }: Props) => {
   return (
     <Container>
       <Col sm>
-        <h2>Filters</h2>
+        <h4>Filters</h4>
       </Col>
       <Col sm>
         <MultiSelect
