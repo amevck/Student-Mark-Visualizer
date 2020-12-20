@@ -70,7 +70,6 @@ const App = () => {
             mapedData={lineChartData}
             xData={semesters}
           />
-          {markDetails.length}
         </div>
       </div>
     </>
