@@ -1,6 +1,5 @@
 import * as mongoose from "mongoose";
 import chalk from "chalk";
-import { matches } from "lodash";
 import Item from "../server/MarkDetails/MarkDetail.model";
 
 const url = process.env.MONGODB_URI || "mongodb://localhost:27018/test_database";

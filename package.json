@@ -34,7 +34,7 @@
     "build": "npm build:backend && npm build:frontend",
     "build:backend": "cd backend && npm build",
     "build:frontend": "cd frontend && npm build",
-    "start": "concurrently \"docker-compose up\" \"npm run start:backend\" \"npm run start:frontend\"",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:withdb": "concurrently \"docker-compose up\" \"npm run start:backend\" \"npm run start:frontend\"",
     "start:backend": "cd backend && npm run start",
     "insert_data": "cd backend/scripts && npx ts-node dataInsertion.ts",
