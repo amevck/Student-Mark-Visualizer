@@ -1,27 +1,25 @@
 import React from "react";
-import { getAverage } from "../helpers/chartDataMappings";
 import Chart from "./Chart";
 
 type Props = {
   title?: string;
-  xData: string[];
+  xData?: string[];
   xAxisName: string;
   yAxisName: string;
   mapedData: any;
 };
 
 const getSeries: any = (mappedData: { [key: string]: number[] }) => {
-  const sers = Object.keys(mappedData).map((key: string) => {
+  return Object.keys(mappedData).map((key: string, i) => {
     return {
-      type: "column",
+      type: "spline",
       name: key,
       data: mappedData[key],
     };
   });
-  return sers;
 };
 
-const ColumnChart = (props: Props) => {
+const LineChart = (props: Props) => {
   const { title, xData: subjects, xAxisName, yAxisName, mapedData = {} } = props;
 
   const options: Highcharts.Options = {
@@ -41,22 +39,15 @@ const ColumnChart = (props: Props) => {
     },
 
     yAxis: {
-      max: 100,
+      //   max: 100,
       title: {
         text: yAxisName,
       },
     },
     tooltip: {
-      pointFormat: "{point.y}",
+      pointFormat: "{point.series.name} : {point.y}",
     },
-    series: [
-      ...getSeries(mapedData, subjects),
-      {
-        type: "spline",
-        name: "Average",
-        data: getAverage(mapedData),
-      },
-    ],
+    series: getSeries(mapedData),
   };
 
   return (
@@ -66,4 +57,4 @@ const ColumnChart = (props: Props) => {
   );
 };
 
-export default ColumnChart;
+export default LineChart;

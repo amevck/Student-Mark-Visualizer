@@ -2,6 +2,15 @@
   text-align: center;
 }
 
+body {
+  margin: 0;
+  background-color: #393e48;
+}
+
+.content {
+  margin-top: 50px;
+  text-align: center;
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
@@ -32,7 +41,8 @@
   align-items: center;
 }
 
-input, button {
+input,
+button {
   margin: 8px;
   width: 300px;
 }
@@ -43,6 +53,10 @@ input, button {
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

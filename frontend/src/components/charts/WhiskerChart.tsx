@@ -1,5 +1,5 @@
 import React from "react";
-import { mapDataToboxPlot, mapDataToScatter } from "../helpers/chartDataMappings";
+import { mapDataToboxPlot, mapDataToScatter } from "../../helpers/chartDataMappings";
 import Chart from "./Chart";
 
 type Props = {
