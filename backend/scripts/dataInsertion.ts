@@ -4,6 +4,7 @@ import Item from "../server/MarkDetails/MarkDetail.model";
 
 const url = process.env.MONGODB_URI || "mongodb://localhost:27018/test_database";
 const port = process.env.PORT || 9000;
+const dataGenerationMultiplier = Number(process.env.DATA_GENERATION_MULTIPLIER) || 100; // 100 will generate ~ 1M data, 1000 will generate ~10M data
 
 const populateDatabase = async () => {
   try {
@@ -15,7 +16,7 @@ const populateDatabase = async () => {
 
 const insertRows = async () => {
   console.log("inserting data ...");
-  for (let id = 1; id <= 4600; id++) {
+  for (let id = 1; id <= 46 * dataGenerationMultiplier; id++) {
     const years = generateNumericArr(2010, 2020);
     const subjects = generateNamesArr("Subj", 10);
     const markRange: [number, number] = [generateRandom(5, 45), generateRandom(55, 100)];
