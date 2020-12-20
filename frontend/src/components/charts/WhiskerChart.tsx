@@ -8,10 +8,11 @@ type Props = {
   yAxisName: string;
   xData: string[];
   yData: number[][];
+  isLoading?: boolean;
 };
 
 const WiskerChart = (props: Props) => {
-  const { title, xAxisName, yAxisName, xData, yData } = props;
+  const { title, xAxisName, yAxisName, xData, yData, isLoading } = props;
 
   const options: Highcharts.Options = {
     title: {
@@ -65,7 +66,7 @@ const WiskerChart = (props: Props) => {
 
   return (
     <div className="chart-container">
-      <Chart options={options} />
+      <Chart isLoading={isLoading} options={options} />
     </div>
   );
 };

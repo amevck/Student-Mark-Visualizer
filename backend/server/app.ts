@@ -12,7 +12,7 @@ import itemsController from "./MarkDetails/Mark.controller";
 const app = express();
 
 // Assign controllers to routes
-app.use("/api/items", itemsController);
+app.use("/student/marks", itemsController);
 
 // Declare the path to frontend's static assets
 app.use(express.static(path.resolve("..", "frontend", "build")));

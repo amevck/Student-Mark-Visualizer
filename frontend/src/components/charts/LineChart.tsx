@@ -7,6 +7,7 @@ type Props = {
   xAxisName: string;
   yAxisName: string;
   mapedData: any;
+  isLoading?: boolean;
 };
 
 const getSeries: any = (mappedData: { [key: string]: number[] }) => {
@@ -20,7 +21,7 @@ const getSeries: any = (mappedData: { [key: string]: number[] }) => {
 };
 
 const LineChart = (props: Props) => {
-  const { title, xData: subjects, xAxisName, yAxisName, mapedData = {} } = props;
+  const { title, xData: subjects, xAxisName, yAxisName, mapedData = {}, isLoading = false } = props;
 
   const options: Highcharts.Options = {
     title: {
@@ -52,7 +53,7 @@ const LineChart = (props: Props) => {
 
   return (
     <div className="chart-container">
-      <Chart options={options} />
+      <Chart isLoading={isLoading} options={options} />
     </div>
   );
 };

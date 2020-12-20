@@ -49,8 +49,9 @@ const getBoxPlotData = (values: number[]) => {
   };
 };
 
-export const getColomnChartData = (markDetails: MarkDetail[], subjectRepetedCount: number) => {
+export const getColomnChartData = (markDetails: MarkDetail[], semesters: number) => {
   const subjects = getAllCategeries(markDetails, "subject");
+  const years = getAllCategeries(markDetails, "year");
   const subjectIndexMap = subjects.reduce((prev, curr, i) => set(prev, curr, i), {});
   const studentIdNamMap = {};
   const studentSubjectMap = markDetails.reduce((prev, curr, i) => {
@@ -65,7 +66,7 @@ export const getColomnChartData = (markDetails: MarkDetail[], subjectRepetedCoun
     }
     valueArr = get(prev, stdId);
     const subjIndex = get(subjectIndexMap, subj);
-    valueArr[subjIndex] = valueArr[subjIndex] + get(curr, "mark") / subjectRepetedCount;
+    valueArr[subjIndex] = valueArr[subjIndex] + get(curr, "mark") / (years.length * semesters);
     return prev;
   }, {});
   const chartData = Object.keys(studentSubjectMap).reduce((prev, id) => {

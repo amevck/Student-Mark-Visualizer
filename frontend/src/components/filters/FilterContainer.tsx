@@ -1,7 +1,7 @@
 import get from "lodash/get";
 import set from "lodash/set";
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Col } from "react-bootstrap";
 import MultiSelect from "./MultiSelect";
 
 type Props = {
@@ -12,7 +12,6 @@ type Props = {
 const FilterContainer = ({ markDetails, onChangeFilters }: Props) => {
   const [filtervals, setFilterVals] = useState({});
   const onChangeFilter = (options: any, accessor: string) => {
-    console.log(accessor, options);
     setFilterVals(prev => {
       set(prev, accessor, options);
       return { ...prev };
@@ -20,8 +19,8 @@ const FilterContainer = ({ markDetails, onChangeFilters }: Props) => {
   };
 
   useEffect(() => {
-    console.log({ filtervals });
     let filteredMarksDetails = markDetails;
+    let filteredMarksDetailsBySId = markDetails;
     Object.keys(filtervals).forEach(accessor => {
       const filterValsObj = get(filtervals, accessor);
       if (filterValsObj && Object.keys(filterValsObj).length) {
@@ -29,12 +28,12 @@ const FilterContainer = ({ markDetails, onChangeFilters }: Props) => {
       }
     });
     const filterValsById = get(filtervals, "studentId");
-    const filteredMarksDetailsBySId =
+    filteredMarksDetailsBySId =
       filterValsById && Object.keys(filterValsById).length
         ? markDetails.filter(detail => get(filterValsById, get(detail, "studentId")))
         : markDetails;
     onChangeFilters({ filteredMarksDetailsBySId, filteredMarksDetails });
-  }, [filtervals]);
+  }, [filtervals, markDetails, onChangeFilters]);
 
   return (
     <Container>
@@ -47,7 +46,6 @@ const FilterContainer = ({ markDetails, onChangeFilters }: Props) => {
           onChangeSelects={(event, accessor) => onChangeFilter(event, accessor)}
           mardkDetails={markDetails}
           accessor={"studentId"}
-          isFirstSelectAsDefault={true}
         />
       </Col>
       <Col sm>

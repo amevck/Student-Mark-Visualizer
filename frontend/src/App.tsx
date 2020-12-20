@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import ColumnChart from "./components/charts/ColumnChart";
 import WiskerChart from "./components/charts/WhiskerChart";
@@ -8,7 +8,7 @@ import LineChart from "./components/charts/LineChart";
 import FilterContainer from "./components/filters/FilterContainer";
 import "./components/sideBar/Sidebar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col, Navbar } from "react-bootstrap";
+import { Container, Navbar } from "react-bootstrap";
 import Sidebar from "./components/sideBar/Sidebar";
 // import studentMarks from "./__test_data/studentMarks.json";
 
@@ -19,12 +19,12 @@ const App = () => {
   const catgs = getAllCategeries(filteredMarksDetails, "subject");
   const boxPlotdata = getAllValuesForCategeryList(filteredMarksDetails, catgs, "subject", "mark");
   const { chartData: lineChartData, semesters } = getSubjectMarkData(filteredMarksDetailsBySId);
-  const { subjects, chartData } = getColomnChartData(filteredMarksDetails, 20);
+  const { subjects, chartData } = getColomnChartData(filteredMarksDetails, 2);
 
-  const onChangeFilterSelection = ({ filteredMarksDetailsBySId, filteredMarksDetails }) => {
+  const onChangeFilterSelection = useCallback(({ filteredMarksDetailsBySId, filteredMarksDetails }) => {
     setfilteredMarksDetails(filteredMarksDetails);
     setfilteredMarksDetailsBySId(filteredMarksDetailsBySId);
-  };
+  }, []);
 
   useEffect(() => {
     getTestData();
@@ -32,9 +32,9 @@ const App = () => {
 
   const getTestData = async (): Promise<void> => {
     try {
-      const response = await axios.get<MarkDetail[]>("/api/items");
+      const studentids = Array.from({ length: 20 }, (_, i) => i + 1); // hard coded 20 ids
+      const response = await axios.get<MarkDetail[]>("/student/marks", { params: { studentids } });
       setMarkDetails(response.data);
-      // setMarkDetails(studentMarks);
     } catch (error) {
       console.error("Something went wrong");
       // TODO handle error

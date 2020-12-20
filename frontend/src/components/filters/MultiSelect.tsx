@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import get from "lodash/get";
 import set from "lodash/set";
@@ -24,8 +24,7 @@ const convertOptionsAsObject = (options: any[]) =>
   }, {});
 
 const MultiSelect = (props: Props) => {
-  const initilizeDefault = useRef(false);
-  const { onChangeSelects, mardkDetails, accessor, name, isFirstSelectAsDefault = false } = props;
+  const { onChangeSelects, mardkDetails, accessor, name } = props;
   const [options, setOptions] = useState([] as any[]);
   const [selectedIdOptions, setsSelectedIdOptions] = useState<any[]>(options[0] ? [options[0]] : []);
 
@@ -36,39 +35,30 @@ const MultiSelect = (props: Props) => {
         return { label: opt, value: i };
       })
     );
-  }, [mardkDetails]);
-
-  useEffect(() => {
-    if (options?.[0] && isFirstSelectAsDefault) {
-      onChangeSelects(convertOptionsAsObject([options[0]]), accessor);
-      setsSelectedIdOptions([options[0]]);
-      initilizeDefault.current = true;
-    }
-  }, [options]);
+  }, [mardkDetails, accessor]);
 
   const setSelectedOption = (option: any) => {
-    setsSelectedIdOptions(prev => {
+    setsSelectedIdOptions(() => {
       onChangeSelects(convertOptionsAsObject(option), accessor);
       return option;
     });
   };
+
   return (
     <div>
-      {(selectedIdOptions?.[0] || !isFirstSelectAsDefault || initilizeDefault.current) && (
-        <div className="multi-select">
-          <label>{name}</label>
-          <div className="dropdown">
-            <Select
-              isMulti
-              components={animatedComponents}
-              onChange={(event: any) => setSelectedOption(event)}
-              closeMenuOnSelect={false}
-              defaultValue={selectedIdOptions}
-              options={options}
-            />
-          </div>
+      <div className="multi-select">
+        <label>{name}</label>
+        <div className="dropdown">
+          <Select
+            isMulti
+            components={animatedComponents}
+            onChange={(event: any) => setSelectedOption(event)}
+            closeMenuOnSelect={false}
+            defaultValue={selectedIdOptions}
+            options={options}
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 };
